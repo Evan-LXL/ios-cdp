@@ -1,0 +1,14 @@
+//
+//  MPCdpDemo_pod-Prefix.pch
+//  MPCdpDemo_pod
+//
+//  Created by quinn on 2020/03/26.
+
+// MPAAS HEADERS BEGIN
+// This part is maintained by MPaaS plugin automatically. 
+#ifdef __OBJC__
+
+#import "MPCdpDemo_pod-mPaaS-Headers.h"
+
+#endif
+// MPAAS HEADERS END

@@ -1,0 +1,38 @@
+<module name="PromotionDataCache" initializer="createTable" tableName="CDPData" version="3.0" resetOnUpgrade="true">
+    <const table_columns="(spaceCode,type,iosViewId,androidViewId,h5ViewId,appId,spaceObjectList,location,height,width,updatePolicy,reqRpcTime,multiStyle,rotationTime,displayMaxCount,urlMaxHeight,picStandard,localRuleList,feedbackRuleList,extInfo,spaceFatigues)"/>
+    <const table_values="%{'#{m.*}',spaceCode,type,iosViewId,androidViewId,h5ViewId,appId,spaceObjectList,location,height,width,updatePolicy,reqRpcTime,multiStyle,rotationTime,displayMaxCount,urlMaxHeight,picStandard,localRuleList,feedbackRuleList,extInfo,spaceFatigues}"/>
+    
+    <update id="createTable">
+        create table if not exists ${T} (spaceCode text primary key, type text,iosViewId text,androidViewId text,h5ViewId text,appId text,spaceObjectList blob,location text,height integer,width integer,updatePolicy text,reqRpcTime integer,multiStyle text,rotationTime integer,displayMaxCount integer,urlMaxHeight integer,picStandard text,localRuleList blob,feedbackRuleList blob,extInfo blob,spaceFatigues blob)
+    </update>
+    
+    <crypt class="CDPSpaceInfo" property="spaceObjectList"/>
+    
+    <!-- 数据保存和更新 -->
+    <insert id = "save_spaceInfo" arguments = "m">
+        replace into ${T} ${table_columns} values(${table_values})
+    </insert>
+    <insert id = "save_spaceInfoList" arguments = "list" foreach="list.m">
+        replace into ${T} ${table_columns} values(${table_values})
+    </insert>
+    
+    <!-- 获取展位信息 -->
+    <select id = "get_spaceInfo" arguments = "spaceCode" result = "CDPSpaceInfo">
+        select *from ${T} where spaceCode = #{spaceCode}
+    </select>
+    
+    <!-- 更新展位下广告内容 -->
+    <update id = "update_spaceObjectInfo" arguments = "m">
+        update ${T} set spaceObjectList = #{m.spaceObjectList} where spaceCode = #{m.spaceCode}
+    </update>
+    
+    <!-- 删除展位信息 -->
+    <delete id = "delete_spaceInfo" arguments = "spaceCode">
+        delete from ${T} where spaceCode = #{spaceCode}
+    </delete>
+    
+    <select id="get_all_spaceCodes" result="[CDPSpaceInfo]">
+        select * from ${T}
+    </select>
+    
+</module>
